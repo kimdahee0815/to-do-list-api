@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 from database import get_db
 import models
@@ -30,9 +31,12 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)):
     return db_todo
 
 @router.get("", response_model=schemas.todoList)
-def get_todolist(db: Session = Depends(get_db)):
-    todos = db.query(models.Todo).all()
-    return {"items": todos}
+def get_todolist(is_done: Optional[bool] = Query(default=None), db: Session = Depends(get_db)):
+    query = db.query(models.Todo)
+    if is_done is not None:
+        query = query.filter(models.Todo.is_done == is_done)
+
+    return {"items": query.all()}
 
 @router.patch("/{todo_id}", response_model=schemas.todoResponse)
 def update_todo(todo_id: int, todo_data: schemas.todoUpdate, db: Session = Depends(get_db)):
