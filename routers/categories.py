@@ -33,7 +33,7 @@ def get_category(db: Session = Depends(get_db)):
 
     return {"items": categories}    
 
-@router.delete("/{category_id}")
+@router.delete("/{category_id}", response_model=schemas.categoryResponse)
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     db_category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not db_category:
