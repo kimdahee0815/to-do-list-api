@@ -25,6 +25,12 @@ def create_category(category: schemas.categoryCreate, db: Session = Depends(get_
 @router.get("", response_model=schemas.categoryList)
 def get_category(db: Session = Depends(get_db)):
     categories = db.query(models.Category).all()
+    for category in categories:
+        titles = []
+        for todo in category.todos:
+            titles.append(todo.title)
+        print(f"[{category.name} CATEGORY] To-Do List Titles : ", titles)
+
     return {"items": categories}    
 
 @router.delete("/{category_id}")

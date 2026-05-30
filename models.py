@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, DateTime, func, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
 from datetime import datetime
 
@@ -21,6 +21,7 @@ class Category(Base):
         server_default=func.now(),
         nullable=False
     )
+    todos = relationship("Todo", back_populates="category")
 
 class Todo(Base):
     __tablename__ = "todo"
@@ -56,3 +57,4 @@ class Todo(Base):
         server_default=func.now(),
         nullable=False
     )
+    category = relationship("Category", back_populates="todos")
