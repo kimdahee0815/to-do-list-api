@@ -32,10 +32,12 @@ def create_todo(todo: schemas.todoCreate, db: Session = Depends(get_db)):
 @router.get("/{todo_id}", response_model=schemas.todoResponse)
 def get_todo(todo_id: int, db: Session = Depends(get_db)):
     db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
-    if db_todo.category is not None:
-        print("category name : ", db_todo.category.name)
     if not db_todo:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")
+    
+    if db_todo.category is not None:
+        print("category name : ", db_todo.category.name)
+    
 
     return db_todo
 
