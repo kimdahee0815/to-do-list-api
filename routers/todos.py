@@ -42,10 +42,13 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)):
     return db_todo
 
 @router.get("", response_model=schemas.todoList)
-def get_todolist(is_done: Optional[bool] = Query(default=None), db: Session = Depends(get_db)):
+def get_todolist(is_done: Optional[bool] = Query(default=None), priority: Optional[int] = Query(default=None), 
+                db: Session = Depends(get_db)):
     query = db.query(models.Todo)
     if is_done is not None:
         query = query.filter(models.Todo.is_done == is_done)
+    if priority is not None:
+        query = query.filter(models.Todo.priority == priority)
 
     return {"items": query.all()}
 
